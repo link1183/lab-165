@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB Lab 165 - Path of Exile Ladder</title>
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome for icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .header-section {
+        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+      }
+      .card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 10px;
+      }
+      .table-container {
+        max-height: 600px;
+        overflow-y: auto;
+      }
+      .info-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+      }
+      .class-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        color: white;
+        font-weight: bold;
+      }
+      .Necromancer {
+        background-color: #6f42c1;
+      }
+      .Witch {
+        background-color: #6f42c1;
+      }
+      .Deadeye {
+        background-color: #dc3545;
+      }
+      .Slayer {
+        background-color: #fd7e14;
+      }
+      .Gladiator {
+        background-color: #28a745;
+      }
+      .Inquisitor {
+        background-color: #ffc107;
+        color: black;
+      }
+      .Raider {
+        background-color: #20c997;
+      }
+      .Champion {
+        background-color: #6c757d;
+      }
+      .Templar {
+        background-color: #17a2b8;
+      }
+      .Marauder {
+        background-color: #dc3545;
+      }
+      .Duelist {
+        background-color: #fd7e14;
+      }
+      .Scion {
+        background-color: #e83e8c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-section">
+      <div class="container">
+        <h1 class="mb-0">
+          <i class="fas fa-trophy me-3"></i>
+          MongoDB Lab 165 - Path of Exile Ladder
+        </h1>
+        <p class="lead mt-2 mb-0">
+          Displaying random player data from the ladder
+        </p>
+      </div>
+    </div>
+
+    <div class="container pb-5">
+      <!-- Document Display -->
+      {% if error %}
+      <div class="alert alert-danger" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error }}
+      </div>
+      {% elif data %}
+      <div class="card position-relative">
+        {% if doc_count %}
+        <div class="info-badge">
+          <span class="badge bg-info">
+            <i class="fas fa-database me-1"></i>
+            Total Players: {{ doc_count }}
+          </span>
+        </div>
+        {% endif %}
+
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="fas fa-user me-2"></i>
+            Random Player from Ladder
+          </h5>
+        </div>
+
+        <div class="card-body">
+          <!-- Player Summary -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <h4>{{ data.name }}</h4>
+              <p class="text-muted">
+                Rank #{{ data.rank }} in {{ data.ladder }}
+              </p>
+            </div>
+            <div class="col-md-6 text-end">
+              <span class="class-badge {{ data.class }}">{{ data.class }}</span>
+              <h5 class="mt-2">Level {{ data.level }}</h5>
+            </div>
+          </div>
+
+          <!-- Player Details Table -->
+          <div class="table-container">
+            <table class="table table-bordered table-hover">
+              <thead class="table-light sticky-top">
+                <tr>
+                  <th scope="col" style="width: 30%">
+                    <i class="fas fa-info-circle me-1"></i>Attribute
+                  </th>
+                  <th scope="col"><i class="fas fa-value me-1"></i>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for key, value in data.items() %}
+                <tr>
+                  <td class="fw-bold text-primary">
+                    {% if key == 'dead' %}
+                    <i class="fas fa-heart-broken me-1"></i>Status {% elif key
+                    == 'online' %} <i class="fas fa-circle me-1"></i>Online {%
+                    elif key == 'level' %} <i class="fas fa-star me-1"></i>Level
+                    {% elif key == 'experience' %}
+                    <i class="fas fa-chart-line me-1"></i>Experience {% elif key
+                    == 'challenges' %}
+                    <i class="fas fa-trophy me-1"></i>Challenges {% elif key ==
+                    'twitch' %} <i class="fab fa-twitch me-1"></i>Twitch {% else
+                    %} {{ key|title }} {% endif %}
+                  </td>
+                  <td>
+                    {% if key == 'dead' %} {% if value %}
+                    <span class="badge bg-danger">Dead</span>
+                    {% else %}
+                    <span class="badge bg-success">Alive</span>
+                    {% endif %} {% elif key == 'online' %} {% if value %}
+                    <span class="badge bg-success">Online</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Offline</span>
+                    {% endif %} {% elif key == 'experience' %} {{
+                    data.experience_formatted if data.experience_formatted else
+                    value }} {% elif key == 'twitch' and value %}
+                    <a
+                      href="https://twitch.tv/{{ value }}"
+                      target="_blank"
+                      class="text-decoration-none"
+                    >
+                      <i class="fab fa-twitch"></i> {{ value }}
+                    </a>
+                    {% elif key == 'twitch' and not value %}
+                    <span class="text-muted">Not available</span>
+                    {% elif key == 'class' %}
+                    <span class="class-badge {{ value }}">{{ value }}</span>
+                    {% else %} {{ value }} {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card-footer bg-light text-center">
+          <button
+            class="btn btn-primary me-2"
+            onclick="window.location.reload()"
+          >
+            <i class="fas fa-sync-alt me-2"></i>
+            Load Another Random Player
+          </button>
+          <a href="/api/stats" class="btn btn-outline-info" target="_blank">
+            <i class="fas fa-chart-bar me-2"></i>
+            View API Stats
+          </a>
+        </div>
+      </div>
+      {% else %}
+      <div class="alert alert-warning text-center" role="alert">
+        <i class="fas fa-search me-2"></i>
+        No data available to display.
+      </div>
+      {% endif %}
+
+      <!-- Additional Information -->
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="fas fa-info-circle me-2"></i>
+                Application Info
+              </h6>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled mb-0">
+                <li><strong>Database:</strong> my_data</li>
+                <li><strong>Collection:</strong> open_data</li>
+                <li><strong>Framework:</strong> Flask + PyMongo</li>
+                <li><strong>Lab:</strong> Module 165</li>
+                <li><strong>Data:</strong> Path of Exile Ladder</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h6 class="mb-0">
+                <i class="fas fa-cogs me-2"></i>
+                Options
+              </h6>
+            </div>
+            <div class="card-body">
+              <a href="/health" class="btn btn-outline-success btn-sm">
+                <i class="fas fa-heartbeat me-1"></i>
+                Health Check
+              </a>
+              <a href="/api/stats" class="btn btn-outline-info btn-sm ms-2">
+                <i class="fas fa-chart-bar me-1"></i>
+                Statistics
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
