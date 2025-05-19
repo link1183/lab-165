@@ -2,21 +2,25 @@
 
 ## Project Overview
 
-This project demonstrates comprehensive MongoDB skills including standalone server management, user authentication, data manipulation, and replica set architecture for Module 165 practical evaluation.
+This project is a flask app that shows a random document of the game "Path of Exile". We only took the first 100 lines of the original files.
 
-## Team Members
+## Practical informations
 
-- [Your Name Here]
-- [Team Member 2]
-- [Team Member 3] (if applicable)
+**Module**: [i165 - Utiliser des bases de données NoSQL](https://moodle.epsic.ch/course/view.php?id=1627)
+
+**Team members:**
+- Adrien Gunther
+- Claire Prodolliet
+- Thomas Burkhalter
 
 ## 🚀 Quick Start
 
 ### Using Docker (Recommended)
 
+Download the ZIP or take it directly from [Github repository](https://github.com/link1183/lab-165).
+You can run the app in standalone mode or enable replicas set.
+
 ```bash
-# Clone the repository
-git clone <repository-url>
 cd lab-165
 
 # Run standalone application
@@ -31,6 +35,8 @@ docker-compose --profile replica up --build
 
 ### Local Installation (Windows 11)
 
+Exectute the setupt scripty or type commands directly in command line.
+
 ```bash
 # Run setup script
 setup-windows.bat
@@ -42,66 +48,44 @@ pip install -r requirements.txt
 python app.py
 ```
 
-## 📁 Project Structure
-
-```
-lab-165/
-├── app.py                 # Main Flask application (standalone)
-├── app_replica.py         # Replica set application (bonus)
-├── templates/             # HTML templates with Bootstrap UI
-├── data/                  # CSV data and exports
-│   ├── path_of_exile_ladder.csv
-│   └── init.js
-├── exports/               # MongoDB collection exports
-├── backup/               # MongoDB backups
-├── docs/                 # Documentation files
-├── scripts/              # Setup and utility scripts
-├── requirements.txt      # Python dependencies
-├── Dockerfile           # Docker configuration
-├── docker-compose.yml   # Multi-service deployment
-└── README.md           # This file
-```
-
-## ✅ Implemented Features
-
-### Core Requirements
+## Features checklist
 
 1. **MongoDB Standalone Server [30%]**
 
-   - ✅ Imported Path of Exile ladder data (13 original + 3 added = 16 documents)
-   - ✅ Modified 3 existing documents with custom fields
-   - ✅ Added 3 new documents with complete structure
-   - ✅ Created my_team collection (3 members)
-   - ✅ Exported collections to JSON format
+- [ ] Imported Path of Exile ladder data (13 original + 3 added = 16 documents)
+- [ ] Modified 3 existing documents with custom fields
+- [ ] Added 3 new documents with complete structure
+- [ ] Created my_team collection (3 members)
+- [ ] Exported collections to JSON format
 
 2. **Mongosh Commands [10%]**
 
-   - ✅ Database listing commands (`show dbs`)
-   - ✅ Collection operations (`show collections`)
-   - ✅ Document counting for both collections
-   - ✅ All commands documented with expected results
+- [ ] Database listing commands (`show dbs`)
+- [ ] Collection operations (`show collections`)
+- [ ] Document counting for both collections
+- [ ] All commands documented with expected results
 
 3. **User Authentication [30%]**
 
-   - ✅ **myUserAdmin**: Full administrative privileges
-   - ✅ **userModify**: Limited read/write to my_data only
-   - ✅ **userPlus**: Backup and restore operations
-   - ✅ Complete server backup with authenticated users
+- [ ] **myUserAdmin**: Full administrative privileges
+- [ ] **userModify**: Limited read/write to my_data only
+- [ ] **userPlus**: Backup and restore operations
+- [ ] Complete server backup with authenticated users
 
 4. **Flask Application [30%]**
-   - ✅ Random document display with beautiful UI
-   - ✅ Bootstrap 5 styling with Path of Exile theme
-   - ✅ Health check endpoint (`/health`)
-   - ✅ Statistics API endpoint (`/api/stats`)
-   - ✅ Docker deployment support
+- [ ] Random document display with beautiful UI
+- [ ] Bootstrap 5 styling with Path of Exile theme
+- [ ] Health check endpoint (`/health`)
+- [ ] Statistics API endpoint (`/api/stats`)
+- [ ] Docker deployment support
 
 ### Bonus Features
 
 5. **Replica Set Implementation [+20%]**
-   - ✅ 3-server replica set configuration
-   - ✅ Modified application for replica set (`app_replica.py`)
-   - ✅ Automated setup scripts for Windows and Linux
-   - ✅ Docker Compose with profiles
+- [ ] 3-server replica set configuration
+- [ ] Modified application for replica set (`app_replica.py`)
+- [ ] Automated setup scripts for Windows and Linux
+- [ ] Docker Compose with profiles
 
 ## 🛠️ Key Technologies
 
@@ -109,13 +93,13 @@ lab-165/
 - **Backend**: Python 3.12 + Flask
 - **Frontend**: Bootstrap 5 + Font Awesome
 - **Deployment**: Docker + Docker Compose
-- **Data**: Path of Exile ladder statistics (16 documents)
+- **Data**: Path of Exile ladder statistics (100 documents)
 
 ## 🔐 User Credentials
 
 | User        | Role   | Access Level              | Password           |
 | ----------- | ------ | ------------------------- | ------------------ |
-| myUserAdmin | Admin  | Full database access      | SecurePassword123! |
+| myUserAdmin | Admin  | Full database access      | <À changer>        |
 | userModify  | User   | my_data read/write only   | UserPassword456!   |
 | userPlus    | Backup | Backup/restore operations | BackupPassword789! |
 
@@ -139,10 +123,8 @@ _See `docs/user_passwords.md` for secure credential storage_
 
 **Source**: Path of Exile Ladder Data  
 **Content**: Player rankings, levels, classes, experience, challenges, Twitch channels, and game modes  
-**Original Size**: 13 documents  
-**Final Size**: 16 documents (13 original + 3 added)  
+**Size**: 100 documents  
 **Collections**:
-
 - `open_data`: Player ladder information
 - `my_team`: Team member information (3 documents)
 
@@ -261,21 +243,3 @@ This project demonstrates proficiency in:
 | **Core Total**     | **100%** | **✅ Complete** | **100%**  |
 | Replica Set Bonus  | +20%     | ✅ Complete     | Excellent |
 | **Final Expected** | **120%** | **✅ Complete** | **120%**  |
-
-## 📞 Support and Contact
-
-For questions about this implementation:
-
-- Check the documentation in `/docs`
-- Verify setup with the provided scripts
-- Test all endpoints and functionality
-- Ensure all requirements are met
-
----
-
-**Project Status**: ✅ Complete and Ready for Evaluation  
-**Team Members**: [Your Names Here]  
-**Module**: 165 - MongoDB Practical Evaluation  
-**Date**: [Current Date]
-
-**All requirements met with bonus features implemented. Project ready for submission!** 🎯
