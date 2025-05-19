@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify
-from pymongo import MongoClient, ReadPreference
+from pymongo import MongoClient
 import os
 
 app = Flask(__name__)
@@ -21,13 +21,14 @@ MONGO_AUTH_DB = os.environ.get("MONGO_AUTH_DB", "admin")
 
 # Connect to MongoDB Replica Set
 try:
+    # Use string format for read preference instead of enum
     client = MongoClient(
         REPLICA_MEMBERS,
         replicaSet=REPLICA_SET_NAME,
         username=MONGO_USERNAME,
         password=MONGO_PASSWORD,
         authSource=MONGO_AUTH_DB,
-        readPreference=ReadPreference.SECONDARY_PREFERRED,  # Prefer reading from secondary
+        readPreference="primary",  # Using primary for initial stability
         serverSelectionTimeoutMS=10000,  # 10 second timeout
         connectTimeoutMS=5000,
         socketTimeoutMS=5000,
@@ -78,12 +79,8 @@ def index():
             )
 
         # Retrieve one random document using aggregation with $sample
-        # Force read from secondary if available
-        with client.start_session() as session:
-            random_doc = collection.aggregate(
-                [{"$sample": {"size": 1}}], session=session
-            )
-            document = next(random_doc, None)
+        random_doc = collection.aggregate([{"$sample": {"size": 1}}])
+        document = next(random_doc, None)
 
         if document:
             # Convert ObjectId to string for display
@@ -163,7 +160,7 @@ def health():
         doc_count = collection.estimated_document_count()
 
         # Get read preference info
-        read_pref = str(collection.read_preference)
+        read_pref = str(client.read_preference)
 
         # Check replica set status
         rs_status = client.admin.command("replSetGetStatus")
@@ -198,6 +195,6 @@ if __name__ == "__main__":
     print(f"Database: {MONGO_DB}")
     print(f"Collection: {MONGO_COLLECTION}")
     print(f"Authentication: {MONGO_USERNAME}@{MONGO_AUTH_DB}")
-    print("Read Preference: SECONDARY_PREFERRED")
+    print("Read Preference: primary")
 
     app.run(debug=True, host="0.0.0.0", port=5000)
