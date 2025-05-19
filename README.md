@@ -9,6 +9,7 @@ This project is a flask app that shows a random document of the game "Path of Ex
 **Module**: [i165 - Utiliser des bases de données NoSQL](https://moodle.epsic.ch/course/view.php?id=1627)
 
 **Team members:**
+
 - Adrien Gunther
 - Claire Prodolliet
 - Thomas Burkhalter
@@ -73,6 +74,7 @@ python app.py
 - [ ] Complete server backup with authenticated users
 
 4. **Flask Application [30%]**
+
 - [ ] Random document display with beautiful UI
 - [ ] Bootstrap 5 styling with Path of Exile theme
 - [ ] Health check endpoint (`/health`)
@@ -82,6 +84,7 @@ python app.py
 ### Bonus Features
 
 5. **Replica Set Implementation [+20%]**
+
 - [ ] 3-server replica set configuration
 - [ ] Modified application for replica set (`app_replica.py`)
 - [ ] Automated setup scripts for Windows and Linux
@@ -125,6 +128,7 @@ _See `docs/user_passwords.md` for secure credential storage_
 **Content**: Player rankings, levels, classes, experience, challenges, Twitch channels, and game modes  
 **Size**: 100 documents  
 **Collections**:
+
 - `open_data`: Player ladder information
 - `my_team`: Team member information (3 documents)
 

@@ -40,7 +40,7 @@ services:
       - ./templates:/app/templates:ro
       - ./static:/app/static:ro
 
-  # MongoDB Admin UI (optional)
+  # MongoDB Admin UI
   mongo-express:
     image: mongo-express:latest
     container_name: mongo-express-lab165
@@ -60,7 +60,7 @@ services:
     profiles:
       - tools
 
-  # MongoDB Replica Set Services (bonus section)
+  # MongoDB Replica Set Services
   mongo-rs1:
     image: mongo:5.0
     container_name: mongo-rs1-lab165
@@ -112,7 +112,7 @@ services:
     profiles:
       - replica
 
-  # Flask application for replica set (bonus)
+  # Flask application for replica set
   app-replica:
     build: .
     container_name: flask-app-replica-lab165
@@ -136,7 +136,7 @@ services:
     volumes:
       - ./templates:/app/templates:ro
       - ./static:/app/static:ro
-    command: python app_replica.py
+    command: python app-replica.py
     profiles:
       - replica
     healthcheck:
