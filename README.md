@@ -24,7 +24,7 @@ You can run the app in standalone mode or enable replicas set.
 cd lab-165
 
 # Run standalone application
-docker-compose up --build
+docker compose up --build
 
 # Access: http://localhost:5000
 
