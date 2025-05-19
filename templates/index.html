@@ -45,6 +45,14 @@
         color: white;
         font-weight: bold;
       }
+      .replica-info {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+      }
+      /* Class-specific colors */
       .Necromancer {
         background-color: #6f42c1;
       }
@@ -98,6 +106,32 @@
     </div>
 
     <div class="container pb-5">
+      <!-- Replica Set Information (if available) -->
+      {% if replica_info %}
+      <div class="replica-info">
+        <h5 class="mb-2">
+          <i class="fas fa-server me-2"></i>
+          Replica Set Information
+        </h5>
+        <div class="row">
+          <div class="col-md-4">
+            <strong>Set Name:</strong> {{ replica_info.set_name }}
+          </div>
+          <div class="col-md-4">
+            <strong>Primary:</strong> {{ replica_info.primary or "None" }}
+          </div>
+          <div class="col-md-4">
+            <strong>Secondaries:</strong> {{ replica_info.secondaries|length }}
+          </div>
+        </div>
+        <div class="mt-2">
+          <strong>Secondary Servers:</strong>
+          {% if replica_info.secondaries %} {{ replica_info.secondaries|join(',
+          ') }} {% else %} None {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
       <!-- Document Display -->
       {% if error %}
       <div class="alert alert-danger" role="alert">
@@ -207,6 +241,16 @@
             <i class="fas fa-chart-bar me-2"></i>
             View API Stats
           </a>
+          {% if replica_info %}
+          <a
+            href="/replica-status"
+            class="btn btn-outline-success"
+            target="_blank"
+          >
+            <i class="fas fa-server me-2"></i>
+            Replica Status
+          </a>
+          {% endif %}
         </div>
       </div>
       {% else %}
@@ -233,6 +277,14 @@
                 <li><strong>Framework:</strong> Flask + PyMongo</li>
                 <li><strong>Lab:</strong> Module 165</li>
                 <li><strong>Data:</strong> Path of Exile Ladder</li>
+                {% if replica_info %}
+                <li>
+                  <strong>Mode:</strong> Replica Set ({{ replica_info.set_name
+                  }})
+                </li>
+                {% else %}
+                <li><strong>Mode:</strong> Standalone MongoDB</li>
+                {% endif %}
               </ul>
             </div>
           </div>
@@ -255,6 +307,15 @@
                 <i class="fas fa-chart-bar me-1"></i>
                 Statistics
               </a>
+              {% if replica_info %}
+              <a
+                href="/replica-status"
+                class="btn btn-outline-warning btn-sm ms-2"
+              >
+                <i class="fas fa-server me-1"></i>
+                Replica Status
+              </a>
+              {% endif %}
             </div>
           </div>
         </div>

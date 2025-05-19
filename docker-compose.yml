@@ -60,6 +60,91 @@ services:
     profiles:
       - tools
 
+  # MongoDB Replica Set Services (bonus section)
+  mongo-rs1:
+    image: mongo:5.0
+    container_name: mongo-rs1-lab165
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    command: mongod --replSet rs0 --bind_ip_all --keyFile /etc/mongo-keyfile --auth
+    volumes:
+      - mongo-rs1-data:/data/db
+      - ./mongo-keyfile:/etc/mongo-keyfile:ro
+    environment:
+      - MONGO_REPLICA_SET_NAME=rs0
+    networks:
+      - lab165-network
+    profiles:
+      - replica
+
+  mongo-rs2:
+    image: mongo:5.0
+    container_name: mongo-rs2-lab165
+    restart: unless-stopped
+    ports:
+      - "27019:27017"
+    command: mongod --replSet rs0 --bind_ip_all --keyFile /etc/mongo-keyfile --auth
+    volumes:
+      - mongo-rs2-data:/data/db
+      - ./mongo-keyfile:/etc/mongo-keyfile:ro
+    environment:
+      - MONGO_REPLICA_SET_NAME=rs0
+    networks:
+      - lab165-network
+    profiles:
+      - replica
+
+  mongo-rs3:
+    image: mongo:5.0
+    container_name: mongo-rs3-lab165
+    restart: unless-stopped
+    ports:
+      - "27020:27017"
+    command: mongod --replSet rs0 --bind_ip_all --keyFile /etc/mongo-keyfile --auth
+    volumes:
+      - mongo-rs3-data:/data/db
+      - ./mongo-keyfile:/etc/mongo-keyfile:ro
+    environment:
+      - MONGO_REPLICA_SET_NAME=rs0
+    networks:
+      - lab165-network
+    profiles:
+      - replica
+
+  # Flask application for replica set (bonus)
+  app-replica:
+    build: .
+    container_name: flask-app-replica-lab165
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+    depends_on:
+      - mongo-rs1
+      - mongo-rs2
+      - mongo-rs3
+    environment:
+      - REPLICA_MEMBERS=mongo-rs1:27017,mongo-rs2:27017,mongo-rs3:27017
+      - REPLICA_SET_NAME=rs0
+      - MONGO_DB=my_data
+      - MONGO_COLLECTION=open_data
+      - MONGO_USERNAME=admin
+      - MONGO_PASSWORD=AdminPassword123!
+      - MONGO_AUTH_DB=admin
+    networks:
+      - lab165-network
+    volumes:
+      - ./templates:/app/templates:ro
+      - ./static:/app/static:ro
+    command: python app_replica.py
+    profiles:
+      - replica
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
 networks:
   lab165-network:
     driver: bridge
@@ -68,4 +153,10 @@ volumes:
   mongo-data:
     driver: local
   mongo-config:
+    driver: local
+  mongo-rs1-data:
+    driver: local
+  mongo-rs2-data:
+    driver: local
+  mongo-rs3-data:
     driver: local
