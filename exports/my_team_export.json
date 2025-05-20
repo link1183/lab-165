@@ -1,0 +1,63 @@
+{
+	"_id": {
+		"$oid": "682ca8adbe20e4715bd861e0"
+	},
+	"name": "Team Member 1",
+	"role": "Database Administrator",
+	"email": "admin@lab165.local",
+	"specialization": "MongoDB Management",
+	"created_at": {
+		"$date": "2025-05-20T16:07:09.643Z"
+	}
+}
+{
+	"_id": {
+		"$oid": "682ca8adbe20e4715bd861e1"
+	},
+	"name": "Team Member 2",
+	"role": "Application Developer",
+	"email": "dev@lab165.local",
+	"specialization": "Flask Applications",
+	"created_at": {
+		"$date": "2025-05-20T16:07:09.643Z"
+	}
+}
+{
+	"_id": {
+		"$oid": "682ca8adbe20e4715bd861e2"
+	},
+	"name": "Team Member 3",
+	"role": "Data Analyst",
+	"email": "analyst@lab165.local",
+	"specialization": "Data Visualization",
+	"created_at": {
+		"$date": "2025-05-20T16:07:09.643Z"
+	}
+}
+{
+	"_id": {
+		"$oid": "682caa696fe566b62cd861e3"
+	},
+	"name": "Team Member 1",
+	"role": "Database Administrator",
+	"email": "member1@example.com",
+	"specialization": "MongoDB Management"
+}
+{
+	"_id": {
+		"$oid": "682caa696fe566b62cd861e4"
+	},
+	"name": "Team Member 2",
+	"role": "Application Developer",
+	"email": "member2@example.com",
+	"specialization": "Flask Applications"
+}
+{
+	"_id": {
+		"$oid": "682caa696fe566b62cd861e5"
+	},
+	"name": "Team Member 3",
+	"role": "Data Analyst",
+	"email": "member3@example.com",
+	"specialization": "Data Visualization"
+}
