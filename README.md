@@ -31,12 +31,13 @@ docker compose up --build
 
 # Run with replica set (bonus)
 docker-compose --profile replica up --build
-# Access: http://localhost:5001
+# Replica access: http://localhost:5001
+# Normal access: http://localhost:5000
 ```
 
 ### Local Installation (Windows 11)
 
-Exectute the setupt scripty or type commands directly in command line.
+Execute the setup script or type commands directly in command line.
 
 ```bash
 # Run setup script
@@ -208,42 +209,3 @@ All documentation is located in the `/docs` directory:
 - `mongosh_commands.md` - Complete command reference with results
 - `user_passwords.md` - Secure credential documentation
 - `windows-setup.md` - Detailed Windows installation guide
-
-## 🎓 Learning Outcomes
-
-This project demonstrates proficiency in:
-
-- MongoDB administration and operations
-- User authentication and authorization
-- Database backup and restore procedures
-- Python web development with Flask
-- Docker containerization and orchestration
-- Replica set configuration (advanced MongoDB feature)
-
-## 📋 Verification Checklist
-
-- [x] MongoDB standalone server configured
-- [x] CSV data imported (13 + 3 = 16 documents)
-- [x] 3 documents modified with custom fields
-- [x] 3 new documents added
-- [x] my_team collection created
-- [x] All mongosh commands documented
-- [x] Three users created with appropriate roles
-- [x] Authentication tested
-- [x] Complete backup created
-- [x] Flask application functional
-- [x] Docker deployment working
-- [x] Windows setup guide provided
-- [x] **Bonus**: Replica set implemented
-
-## 🏆 Expected Grade
-
-| Component          | Weight   | Status          | Quality   |
-| ------------------ | -------- | --------------- | --------- |
-| MongoDB Server     | 30%      | ✅ Complete     | Excellent |
-| Mongosh Commands   | 10%      | ✅ Complete     | Excellent |
-| Authentication     | 30%      | ✅ Complete     | Excellent |
-| Application        | 30%      | ✅ Complete     | Excellent |
-| **Core Total**     | **100%** | **✅ Complete** | **100%**  |
-| Replica Set Bonus  | +20%     | ✅ Complete     | Excellent |
-| **Final Expected** | **120%** | **✅ Complete** | **120%**  |

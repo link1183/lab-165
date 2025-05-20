@@ -1,13 +1,13 @@
 services:
-  # MongoDB standalone server (working)
+  # MongoDB standalone server
   mongodb:
-    image: mongo:5.0
+    image: mongo:8.0
     container_name: mongodb-lab165
     restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
-      - ./data:/docker-entrypoint-initdb.d:ro
+      - ./data:/docker-entrypoint-initdb.d
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=AdminPassword123!
@@ -15,7 +15,7 @@ services:
     networks:
       - lab165-network
 
-  # Flask application (standalone mode - working)
+  # Flask application
   app:
     build: .
     container_name: flask-app-lab165
@@ -35,12 +35,12 @@ services:
     networks:
       - lab165-network
     volumes:
-      - ./templates:/app/templates:ro
-      - ./static:/app/static:ro
+      - ./templates:/app/templates
+      - ./static:/app/static
 
-  # MongoDB Replica Set - Simplifying storage configuration
+  # MongoDB Replica Set
   mongo-rs1:
-    image: mongo:5.0
+    image: mongo:8.0
     container_name: mongo-rs1-lab165
     restart: unless-stopped
     command: mongod --replSet rs0 --bind_ip_all
@@ -52,7 +52,7 @@ services:
       - replica
 
   mongo-rs2:
-    image: mongo:5.0
+    image: mongo:8.0
     container_name: mongo-rs2-lab165
     restart: unless-stopped
     command: mongod --replSet rs0 --bind_ip_all
@@ -64,7 +64,7 @@ services:
       - replica
 
   mongo-rs3:
-    image: mongo:5.0
+    image: mongo:8.0
     container_name: mongo-rs3-lab165
     restart: unless-stopped
     command: mongod --replSet rs0 --bind_ip_all
@@ -75,9 +75,9 @@ services:
     profiles:
       - replica
 
-  # Simpler replica set initializer
+  # Replica set initializer
   mongo-rs-init:
-    image: mongo:5.0
+    image: mongo:8.0
     container_name: mongo-rs-init-lab165
     restart: "no"
     depends_on:
@@ -87,7 +87,7 @@ services:
     networks:
       - lab165-network
     volumes:
-      - ./data:/data:ro
+      - ./data:/data
     command: >
       bash -c "
         echo 'Waiting for MongoDB nodes to start...'
@@ -101,27 +101,23 @@ services:
               {_id: 2, host: \"mongo-rs3-lab165:27017\", priority: 1}
             ]
           });
-          
-          // Wait for primary election
+
           while (!rs.isMaster().ismaster) {
             print(\"Waiting for primary election...\");
             sleep(1000);
           }
-          
-          // Create admin user
+
           db = db.getSiblingDB(\"admin\");
           db.createUser({
             user: \"admin\",
             pwd: \"AdminPassword123!\",
             roles: [{role: \"root\", db: \"admin\"}]
           });
-          
-          // Import data
+
           db = db.getSiblingDB(\"my_data\");
           db.createCollection(\"open_data\");
           db.createCollection(\"my_team\");
-          
-          // Create my_team data
+
           db.my_team.insertMany([
             {
               name: \"Team Member 1\",
@@ -146,9 +142,9 @@ services:
             }
           ]);
         '
-        
+
         echo 'Replica set initialization completed!'
-        
+
         # Now import data from CSV
         echo 'Importing CSV data...'
         mongoimport --host mongo-rs1-lab165:27017 --db my_data --collection open_data --type csv --headerline --file /data/path_of_exile_ladder.csv
@@ -176,8 +172,8 @@ services:
     networks:
       - lab165-network
     volumes:
-      - ./templates:/app/templates:ro
-      - ./static:/app/static:ro
+      - ./templates:/app/templates
+      - ./static:/app/static
     command: >
       bash -c "
         echo 'Waiting for replica set initialization (60 seconds)...'
