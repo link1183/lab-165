@@ -70,7 +70,7 @@ mongosh --eval "db.adminCommand('ping')"
 
 ```cmd
 # Import the CSV data
-mongoimport --db my_data --collection open_data --type csv --headerline --file data\path_of_exile_ladder.csv
+mongoimport --db my_data --collection open_data --type json --file data\path_of_exile_ladder.json
 
 # Create required modifications (run these in mongosh)
 ```

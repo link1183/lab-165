@@ -119,31 +119,109 @@ docker-compose --profile tools up --build
 ### 1. Data Import and Modification
 
 ```bash
-# Import CSV data
-mongoimport --db my_data --collection open_data --type json --headerline --file data/path_of_exile_ladder.csv
+# Import JSON data
+mongoimport --db my_data --collection open_data --type json --file data/path_of_exile_ladder.json
 
-# Modify 3 documents (add custom fields)
-# Add 3 new documents
-# Create my_team collection
+// Modify 3 documents
+db.open_data.updateOne(
+  { "name": "Tzn_NecroIsFineNow" },
+  { $set: { "custom_field": "Modified Player 1", "modified_at": new Date() } }
+)
+
+db.open_data.updateOne(
+  { "name": "RaizNeverFirstQT" },
+  { $set: { "custom_field": "Modified Player 2", "modified_at": new Date() } }
+)
+
+db.open_data.updateOne(
+  { "name": "GucciStreamerAdvantage" },
+  { $set: { "custom_field": "Modified Player 3", "modified_at": new Date() } }
+)
+
+// Add 3 new documents
+db.open_data.insertMany([
+  {
+    "rank": 100,
+    "dead": false,
+    "online": true,
+    "name": "CustomPlayer1",
+    "level": 85,
+    "class": "Templar",
+    "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "experience": 3500000000,
+    "account": "NewAccount1",
+    "challenges": 30,
+    "twitch": "customplayer1",
+    "ladder": "Custom League",
+    "custom_field": "Added Player 1",
+    "created_at": new Date()
+  },
+  {
+    "rank": 101,
+    "dead": false,
+    "online": false,
+    "name": "CustomPlayer2",
+    "level": 78,
+    "class": "Marauder",
+    "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "experience": 3200000000,
+    "account": "NewAccount2",
+    "challenges": 25,
+    "twitch": null,
+    "ladder": "Custom League HC",
+    "custom_field": "Added Player 2",
+    "created_at": new Date()
+  },
+  {
+    "rank": 102,
+    "dead": true,
+    "online": false,
+    "name": "CustomPlayer3",
+    "level": 66,
+    "class": "Duelist",
+    "id": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "experience": 2800000000,
+    "account": "NewAccount3",
+    "challenges": 20,
+    "twitch": "customgamer3",
+    "ladder": "Custom SSF",
+    "custom_field": "Added Player 3",
+    "created_at": new Date()
+  }
+])
 ```
 
 ### 2. User Authentication
 
 ```javascript
 // Create three users with different privileges
-db.createUser({user: "myUserAdmin", pwd: "SecurePassword123!", roles: [...]})
-db.createUser({user: "userModify", pwd: "UserPassword456!", roles: [...]})
-db.createUser({user: "userPlus", pwd: "BackupPassword789!", roles: [...]})
+db.createUser({
+  user: "myUserAdmin",
+  pwd: "SecurePassword123!",
+  roles: [
+    { role: "userAdminAnyDatabase", db: "admin" },
+    { role: "readWriteAnyDatabase", db: "admin" },
+  ],
+});
+
+db.createUser({
+  user: "userModify",
+  pwd: "UserPassword456!",
+  roles: [{ role: "readWrite", db: "my_data" }],
+});
+
+db.createUser({
+  user: "userPlus",
+  pwd: "BackupPassword789!",
+  roles: [
+    { role: "backup", db: "admin" },
+    { role: "restore", db: "admin" },
+    { role: "readWriteAnyDatabase", db: "admin" },
+  ],
+});
 ```
 
-### 3. Application Development
-
-- Flask application with MongoDB integration
-- Bootstrap UI with Path of Exile styling
-- Health monitoring and statistics
-- Docker containerization
-
-### 4. Backup and Export
+### 3. Backup and Export
 
 ```bash
 # Export collections
@@ -154,7 +232,7 @@ mongoexport --db my_data --collection my_team --out exports/my_team_export.json
 mongodump --username userPlus --password BackupPassword789! --out backup/
 ```
 
-## 📚 Documentation
+## Documentation
 
 All documentation is located in the `/docs` directory:
 

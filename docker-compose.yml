@@ -146,7 +146,7 @@ services:
 
         # Now import data from CSV
         echo 'Importing CSV data...'
-        mongoimport --host mongo-rs1-lab165:27017 --db my_data --collection open_data --type json --headerline --file /data/path_of_exile_ladder.json
+        mongoimport --host mongo-rs1-lab165:27017 --db my_data --collection open_data --type json --file /data/path_of_exile_ladder.json
       "
     profiles:
       - replica
