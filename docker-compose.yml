@@ -36,7 +36,6 @@ services:
       - lab165-network
     volumes:
       - ./templates:/app/templates
-      - ./static:/app/static
 
   # MongoDB Replica Set
   mongo-rs1:
@@ -120,23 +119,23 @@ services:
 
           db.my_team.insertMany([
             {
-              name: \"Team Member 1\",
+              name: \"Adrien Gunther\",
               role: \"Database Administrator\",
-              email: \"admin@lab165.local\",
+              email: \"adrien.gunther@eduvaud.ch\",
               specialization: \"MongoDB Management\",
               created_at: new Date()
             },
             {
-              name: \"Team Member 2\",
+              name: \"Claire Prodolliet\",
               role: \"Application Developer\",
-              email: \"dev@lab165.local\",
+              email: \"claire.prodolliet@eduvaud.ch\",
               specialization: \"Flask Applications\",
               created_at: new Date()
             },
             {
-              name: \"Team Member 3\",
+              name: \"Thomas Burkhalter\",
               role: \"Data Analyst\",
-              email: \"analyst@lab165.local\",
+              email: \"thomas.burkhalter@eduvaud.ch\",
               specialization: \"Data Visualization\",
               created_at: new Date()
             }
@@ -147,7 +146,7 @@ services:
 
         # Now import data from CSV
         echo 'Importing CSV data...'
-        mongoimport --host mongo-rs1-lab165:27017 --db my_data --collection open_data --type csv --headerline --file /data/path_of_exile_ladder.csv
+        mongoimport --host mongo-rs1-lab165:27017 --db my_data --collection open_data --type json --headerline --file /data/path_of_exile_ladder.json
       "
     profiles:
       - replica
@@ -173,7 +172,6 @@ services:
       - lab165-network
     volumes:
       - ./templates:/app/templates
-      - ./static:/app/static
     command: >
       bash -c "
         echo 'Waiting for replica set initialization (60 seconds)...'

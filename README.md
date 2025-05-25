@@ -35,37 +35,6 @@ docker-compose --profile replica up --build
 # Normal access: http://localhost:5000
 ```
 
-## Features checklist
-
-1. **MongoDB Standalone Server [30%]**
-
-- [x] Imported Path of Exile ladder data (13 original + 3 added = 16 documents)
-- [x] Modified 3 existing documents with custom fields
-- [x] Added 3 new documents with complete structure
-- [x] Created my_team collection (3 members)
-- [x] Exported collections to JSON format
-
-2. **Mongosh Commands [10%]**
-
-- [x] Database listing commands (`show dbs`)
-- [x] Collection operations (`show collections`)
-- [x] Document counting for both collections
-- [x] All commands documented with expected results
-
-3. **User Authentication [30%]**
-
-- [x] **myUserAdmin**: Full administrative privileges
-- [x] **userModify**: Limited read/write to my_data only
-- [x] **userPlus**: Backup and restore operations
-- [x] Complete server backup with authenticated users
-
-4. **Flask Application [30%]**
-
-- [x] Random document display
-- [x] Health check endpoint (`/health`)
-- [x] Statistics API endpoint (`/api/stats`)
-- [x] Docker deployment support
-
 ### Bonus Features
 
 5. **Replica Set Implementation [+20%]**
@@ -100,13 +69,21 @@ _See `docs/user_passwords.md` for secure credential storage_
 
 ## Data Description
 
-**Source**: Path of Exile Ladder Data  
-**Content**: Player rankings, levels, classes, experience, challenges, Twitch channels, and game modes  
-**Size**: 100 documents  
+**Source**: [Path of Exile Ladder Data](https://www.kaggle.com/datasets/gagazet/path-of-exile-league-statistic?resource=download)
+**Content**: Player rankings, levels, classes, experience, challenges, Twitch channels, and game modes
+**Size**: 100 documents
 **Collections**:
 
 - `open_data`: Player ladder information
 - `my_team`: Team member information (3 documents)
+
+Note:
+The original data is a CSV file, which we converted back to a JSON using the following commands (they require [NPM](https://nodejs.org/en) to be installed):
+
+```sh
+npm install -g csvtojson
+npx csvtojson data/path_of_exile_ladder.csv | jq '.' > data/path_of_exile_ladder.json
+```
 
 ## 🚀 Deployment Options
 
@@ -137,13 +114,13 @@ docker-compose --profile tools up --build
 4. Export collections and create backup
 5. Run Flask application
 
-## 📝 Key Implementation Steps
+## Key Implementation Steps
 
 ### 1. Data Import and Modification
 
 ```bash
 # Import CSV data
-mongoimport --db my_data --collection open_data --type csv --headerline --file data/path_of_exile_ladder.csv
+mongoimport --db my_data --collection open_data --type json --headerline --file data/path_of_exile_ladder.csv
 
 # Modify 3 documents (add custom fields)
 # Add 3 new documents
