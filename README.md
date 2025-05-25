@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project is a flask app that shows a random document of the game "Path of Exile". We only took the first 100 lines of the original files.
+This project is a flask app that shows a random document of the MMO RPG "Path of Exile". We only took the first 100 lines of the original files.
 
 ## Practical informations
 
@@ -35,71 +35,46 @@ docker-compose --profile replica up --build
 # Normal access: http://localhost:5000
 ```
 
-### Local Installation (Windows 11)
-
-Execute the setup script or type commands directly in command line.
-
-```bash
-# Run setup script
-setup-windows.bat
-
-# Or manually:
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-python app.py
-```
-
 ## Features checklist
 
 1. **MongoDB Standalone Server [30%]**
 
-- [ ] Imported Path of Exile ladder data (13 original + 3 added = 16 documents)
-- [ ] Modified 3 existing documents with custom fields
-- [ ] Added 3 new documents with complete structure
-- [ ] Created my_team collection (3 members)
-- [ ] Exported collections to JSON format
+- [x] Imported Path of Exile ladder data (13 original + 3 added = 16 documents)
+- [x] Modified 3 existing documents with custom fields
+- [x] Added 3 new documents with complete structure
+- [x] Created my_team collection (3 members)
+- [x] Exported collections to JSON format
 
 2. **Mongosh Commands [10%]**
 
-- [ ] Database listing commands (`show dbs`)
-- [ ] Collection operations (`show collections`)
-- [ ] Document counting for both collections
-- [ ] All commands documented with expected results
+- [x] Database listing commands (`show dbs`)
+- [x] Collection operations (`show collections`)
+- [x] Document counting for both collections
+- [x] All commands documented with expected results
 
 3. **User Authentication [30%]**
 
-- [ ] **myUserAdmin**: Full administrative privileges
-- [ ] **userModify**: Limited read/write to my_data only
-- [ ] **userPlus**: Backup and restore operations
-- [ ] Complete server backup with authenticated users
+- [x] **myUserAdmin**: Full administrative privileges
+- [x] **userModify**: Limited read/write to my_data only
+- [x] **userPlus**: Backup and restore operations
+- [x] Complete server backup with authenticated users
 
 4. **Flask Application [30%]**
 
-- [ ] Random document display with beautiful UI
-- [ ] Bootstrap 5 styling with Path of Exile theme
-- [ ] Health check endpoint (`/health`)
-- [ ] Statistics API endpoint (`/api/stats`)
-- [ ] Docker deployment support
+- [x] Random document display
+- [x] Health check endpoint (`/health`)
+- [x] Statistics API endpoint (`/api/stats`)
+- [x] Docker deployment support
 
 ### Bonus Features
 
 5. **Replica Set Implementation [+20%]**
 
-- [ ] 3-server replica set configuration
-- [ ] Modified application for replica set (`app_replica.py`)
-- [ ] Automated setup scripts for Windows and Linux
-- [ ] Docker Compose with profiles
+- [x] 3-server replica set configuration
+- [x] Modified application for replica set (`app-replica.py`)
+- [x] Docker Compose with profiles
 
-## 🛠️ Key Technologies
-
-- **Database**: MongoDB 5.0 with authentication
-- **Backend**: Python 3.12 + Flask
-- **Frontend**: Bootstrap 5 + Font Awesome
-- **Deployment**: Docker + Docker Compose
-- **Data**: Path of Exile ladder statistics (100 documents)
-
-## 🔐 User Credentials
+## User Credentials
 
 | User        | Role   | Access Level              | Password           |
 | ----------- | ------ | ------------------------- | ------------------ |
@@ -109,7 +84,7 @@ python app.py
 
 _See `docs/user_passwords.md` for secure credential storage_
 
-## 🌐 Application Endpoints
+## Application Endpoints
 
 ### Main Application (port 5000)
 
@@ -123,7 +98,7 @@ _See `docs/user_passwords.md` for secure credential storage_
 - `/replica-status` - Detailed replica set status
 - `/health` - Health check with replica set details
 
-## 📊 Data Description
+## Data Description
 
 **Source**: Path of Exile Ladder Data  
 **Content**: Player rankings, levels, classes, experience, challenges, Twitch channels, and game modes  

@@ -1,9 +1,6 @@
 // Switch to my_data database
 db = db.getSiblingDB("my_data");
 
-// Import will be handled by mongoimport, but we can create indexes and initial data
-
-// Create indexes for better performance
 db.open_data.createIndex({ name: 1 });
 db.open_data.createIndex({ class: 1 });
 db.open_data.createIndex({ level: -1 });
