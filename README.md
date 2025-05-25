@@ -30,7 +30,7 @@ docker compose up --build
 # Access: http://localhost:5000
 
 # Run with replica set (bonus)
-docker-compose --profile replica up --build
+docker compose --profile replica up --build
 # Replica access: http://localhost:5001
 # Normal access: http://localhost:5000
 ```
