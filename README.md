@@ -1,10 +1,10 @@
-# MongoDB Lab 165 - Practical Evaluation
+# MongoDB Lab 165
 
 ## Project Overview
 
-This project is a flask app that shows a random document of the MMO RPG "Path of Exile". We only took the first 100 lines of the original files.
+This project is a Flask application that displays random documents from a MongoDB collection containing Path of Exile ladder data.
 
-## Practical informations
+## Practical Information
 
 **Module**: [i165 - Utiliser des bases de données NoSQL](https://moodle.epsic.ch/course/view.php?id=1627)
 
@@ -14,12 +14,11 @@ This project is a flask app that shows a random document of the MMO RPG "Path of
 - Claire Prodolliet
 - Thomas Burkhalter
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Using Docker (Recommended)
 
-Download the ZIP or take it directly from [Github repository](https://github.com/link1183/lab-165).
-You can run the app in standalone mode or enable replicas set.
+Download the ZIP or clone from [Github repository](https://github.com/link1183/lab-165).
 
 ```bash
 cd lab-165
@@ -29,25 +28,28 @@ docker compose up --build
 
 # Access: http://localhost:5000
 
-# Run with replica set (bonus)
+# Run with replica set (bonus feature)
 docker compose --profile replica up --build
 # Replica access: http://localhost:5001
 # Normal access: http://localhost:5000
 ```
 
-### Bonus Features
+### Manual Windows Setup
 
-5. **Replica Set Implementation [+20%]**
+For manual installation on Windows 11, see detailed instructions in `docs/windows-setup.md`.
 
-- [x] 3-server replica set configuration
-- [x] Modified application for replica set (`app-replica.py`)
-- [x] Docker Compose with profiles
+Requirements:
+
+- Python 3.12+
+- MongoDB Community Edition
+- Virtual environment setup
+- Manual database configuration
 
 ## User Credentials
 
 | User        | Role   | Access Level              | Password           |
 | ----------- | ------ | ------------------------- | ------------------ |
-| myUserAdmin | Admin  | Full database access      | <À changer>        |
+| myUserAdmin | Admin  | Full database access      | SecurePassword123! |
 | userModify  | User   | my_data read/write only   | UserPassword456!   |
 | userPlus    | Backup | Backup/restore operations | BackupPassword789! |
 
@@ -70,172 +72,106 @@ _See `docs/user_passwords.md` for secure credential storage_
 ## Data Description
 
 **Source**: [Path of Exile Ladder Data](https://www.kaggle.com/datasets/gagazet/path-of-exile-league-statistic?resource=download)
+
 **Content**: Player rankings, levels, classes, experience, challenges, Twitch channels, and game modes
-**Size**: 100 documents
+
+**Size**: 100 original documents + 3 modifications + 3 additions = 103 total
+
 **Collections**:
 
-- `open_data`: Player ladder information
+- `open_data`: Player ladder information (103 documents)
 - `my_team`: Team member information (3 documents)
 
-Note:
-The original data is a CSV file, which we converted back to a JSON using the following commands (they require [NPM](https://nodejs.org/en) to be installed):
+**Data Processing**:
+The original CSV data was converted to JSON using:
 
 ```sh
 npm install -g csvtojson
 npx csvtojson data/path_of_exile_ladder.csv | jq '.' > data/path_of_exile_ladder.json
 ```
 
-## 🚀 Deployment Options
+Note :
+The original downloaded file contains about 10000 documents. We reduced this size to the 100 documents present in this project.
 
-### 1. Docker Deployment (Recommended)
-
-```bash
-# Standard deployment
-docker-compose up --build
-
-# With replica set
-docker-compose --profile replica up --build
-
-# With MongoDB Express (database UI)
-docker-compose --profile tools up --build
-```
-
-### 2. Windows 11 Local Setup
-
-1. Run `setup-windows.bat`
-2. Follow prompts for automatic installation
-3. Manual steps in `docs/windows-setup.md`
-
-### 3. Manual Configuration
-
-1. Install MongoDB and Python
-2. Create users with authentication
-3. Import data and make modifications
-4. Export collections and create backup
-5. Run Flask application
-
-## Key Implementation Steps
+## Implementation Requirements
 
 ### 1. Data Import and Modification
 
-```bash
-# Import JSON data
-mongoimport --db my_data --collection open_data --type json --file data/path_of_exile_ladder.json
+**Import JSON data**: 100 Path of Exile ladder entries
 
-// Modify 3 documents
-db.open_data.updateOne(
-  { "name": "Tzn_NecroIsFineNow" },
-  { $set: { "custom_field": "Modified Player 1", "modified_at": new Date() } }
-)
+**Modify 3 documents**: Added custom fields to existing players:
 
-db.open_data.updateOne(
-  { "name": "RaizNeverFirstQT" },
-  { $set: { "custom_field": "Modified Player 2", "modified_at": new Date() } }
-)
+- `Tzn_NecroIsFineNow` → "Modified Player 1"
+- `RaizNeverFirstQT` → "Modified Player 2"
+- `GucciStreamerAdvantage` → "Modified Player 3"
 
-db.open_data.updateOne(
-  { "name": "GucciStreamerAdvantage" },
-  { $set: { "custom_field": "Modified Player 3", "modified_at": new Date() } }
-)
-
-// Add 3 new documents
-db.open_data.insertMany([
-  {
-    "rank": 100,
-    "dead": false,
-    "online": true,
-    "name": "CustomPlayer1",
-    "level": 85,
-    "class": "Templar",
-    "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "experience": 3500000000,
-    "account": "NewAccount1",
-    "challenges": 30,
-    "twitch": "customplayer1",
-    "ladder": "Custom League",
-    "custom_field": "Added Player 1",
-    "created_at": new Date()
-  },
-  {
-    "rank": 101,
-    "dead": false,
-    "online": false,
-    "name": "CustomPlayer2",
-    "level": 78,
-    "class": "Marauder",
-    "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "experience": 3200000000,
-    "account": "NewAccount2",
-    "challenges": 25,
-    "twitch": null,
-    "ladder": "Custom League HC",
-    "custom_field": "Added Player 2",
-    "created_at": new Date()
-  },
-  {
-    "rank": 102,
-    "dead": true,
-    "online": false,
-    "name": "CustomPlayer3",
-    "level": 66,
-    "class": "Duelist",
-    "id": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-    "experience": 2800000000,
-    "account": "NewAccount3",
-    "challenges": 20,
-    "twitch": "customgamer3",
-    "ladder": "Custom SSF",
-    "custom_field": "Added Player 3",
-    "created_at": new Date()
-  }
-])
-```
+**Add 3 new documents**: Custom players with different classes and leagues
 
 ### 2. User Authentication
 
+**Three user types created**:
+
+- **myUserAdmin**: Full administrative access
+- **userModify**: Read/write access to my_data only
+- **userPlus**: Backup and restore operations
+
+### 3. Data Export and Backup
+
+**Collections exported**: JSON exports in `/exports` directory
+
+**Database backup**: Complete mongodump backup in `/backup` directory
+
+**Verification commands**: Documented in `docs/mongosh_commands.md`
+
+## Project Structure
+
+```
+lab-165/
+├── app.py                     # Main Flask application
+├── app-replica.py             # Replica set Flask application
+├── Dockerfile                 # Docker container configuration
+├── docker-compose.yml         # Docker services configuration
+├── requirements.txt           # Python dependencies
+├── data/
+│   └── path_of_exile_ladder.json
+├── docs/
+│   ├── mongosh_commands.md    # MongoDB commands reference
+│   ├── user_passwords.md      # User credentials documentation
+│   └── windows-setup.md       # Manual Windows installation
+├── exports/
+│   ├── open_data_export.json  # Collection export
+│   └── my_team_export.json    # Team collection export
+├── backup/                    # MongoDB backup files
+└── templates/
+    └── index.html             # Web interface template
+```
+
+## MongoDB Commands Reference
+
+Key verification commands (run in `mongosh`):
+
 ```javascript
-// Create three users with different privileges
-db.createUser({
-  user: "myUserAdmin",
-  pwd: "SecurePassword123!",
-  roles: [
-    { role: "userAdminAnyDatabase", db: "admin" },
-    { role: "readWriteAnyDatabase", db: "admin" },
-  ],
-});
+// Check databases
+show dbs
 
-db.createUser({
-  user: "userModify",
-  pwd: "UserPassword456!",
-  roles: [{ role: "readWrite", db: "my_data" }],
-});
+// Check collections
+use my_data
+show collections
 
-db.createUser({
-  user: "userPlus",
-  pwd: "BackupPassword789!",
-  roles: [
-    { role: "backup", db: "admin" },
-    { role: "restore", db: "admin" },
-    { role: "readWriteAnyDatabase", db: "admin" },
-  ],
-});
+// Count documents
+db.open_data.countDocuments()  // Should be 103
+db.my_team.countDocuments()    // Should be 3
+
+// Verify modifications
+db.open_data.find({ custom_field: { $exists: true } }).count()  // Should be 6
+db.open_data.find({ created_at: { $exists: true } }).count()    // Should be 3
 ```
 
-### 3. Backup and Export
-
-```bash
-# Export collections
-mongoexport --db my_data --collection open_data --out exports/open_data_export.json
-mongoexport --db my_data --collection my_team --out exports/my_team_export.json
-
-# Create backup
-mongodump --username userPlus --password BackupPassword789! --out backup/
-```
+Complete command reference available in `docs/mongosh_commands.md`.
 
 ## Documentation
 
-All documentation is located in the `/docs` directory:
-
-- `./docs/mongosh_commands.md` - Complete command reference with results
-- `./docs/user_passwords.md` - Secure credential documentation
-- `./docs/windows-setup.md` - Detailed Windows installation guide
+- **Setup Guide**: `docs/windows-setup.md`
+- **Commands Reference**: `docs/mongosh_commands.md`
+- **User Credentials**: `docs/user_passwords.md`
+- **API Documentation**: Available at `/health` and `/api/stats` endpoints

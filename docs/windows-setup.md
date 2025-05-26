@@ -1,4 +1,4 @@
-# Windows 11 Setup Guide for MongoDB Lab 165
+# Windows 11 Setup Guide
 
 ## Prerequisites
 
@@ -30,17 +30,10 @@ git clone https://github.com/link1183/lab-165.git
 cd lab-165
 
 # Option 2: Download and extract ZIP file
-# Extract to whatever is your preferred location
+# Extract to your preferred location
 ```
 
-### Step 2: Automatic Setup
-
-```cmd
-# Run the setup script
-setup-windows.bat
-```
-
-### Step 3: Manual Setup (if automatic fails)
+### Step 2: Create Python Virtual Environment
 
 ```cmd
 # Create virtual environment
@@ -49,14 +42,21 @@ python -m venv venv
 # Activate virtual environment
 venv\Scripts\activate
 
+# Upgrade pip
+pip install --upgrade pip
+
 # Install dependencies
 pip install -r requirements.txt
+```
 
-# Create directories
+### Step 3: Create Project Directories
+
+```cmd
+# Create necessary directories
 mkdir data exports backup
 ```
 
-### Step 4: Start MongoDB
+### Step 4: Start MongoDB Service
 
 ```cmd
 # Start MongoDB service
@@ -66,23 +66,27 @@ net start MongoDB
 mongosh --eval "db.adminCommand('ping')"
 ```
 
-### Step 5: Import Data
+### Step 5: Import Data to MongoDB
 
 ```cmd
-# Import the CSV data
+# Import the JSON data
 mongoimport --db my_data --collection open_data --type json --file data\path_of_exile_ladder.json
-
-# Create required modifications (run these in mongosh)
 ```
 
-### Step 6: Set Up Users
+### Step 6: Create MongoDB Users
 
-Connect to mongosh and run:
+Connect to MongoDB shell and create the required users:
+
+```cmd
+mongosh
+```
+
+Run these commands in the MongoDB shell:
 
 ```javascript
 use admin
 
-// Create users
+// Create admin user
 db.createUser({
   user: "myUserAdmin",
   pwd: "SecurePassword123!",
@@ -92,6 +96,7 @@ db.createUser({
   ]
 })
 
+// Create read/write user for my_data database
 db.createUser({
   user: "userModify",
   pwd: "UserPassword456!",
@@ -100,6 +105,7 @@ db.createUser({
   ]
 })
 
+// Create backup user
 db.createUser({
   user: "userPlus",
   pwd: "BackupPassword789!",
@@ -111,145 +117,179 @@ db.createUser({
 })
 ```
 
-### Step 7: Make Required Modifications
+### Step 7: Create Team Collection
+
+Still in the MongoDB shell:
 
 ```javascript
 use my_data
 
-// Modify 3 documents
-db.open_data.updateOne(
-  { "name": "Tzn_NecroIsFineNow" },
-  { $set: { "custom_field": "Modified Player 1", "modified_at": new Date() } }
-)
-
-db.open_data.updateOne(
-  { "name": "RaizNeverFirstQT" },
-  { $set: { "custom_field": "Modified Player 2", "modified_at": new Date() } }
-)
-
-db.open_data.updateOne(
-  { "name": "GucciStreamerAdvantage" },
-  { $set: { "custom_field": "Modified Player 3", "modified_at": new Date() } }
-)
-
-// Add 3 new documents
-db.open_data.insertMany([
+// Create my_team collection with team member data
+db.my_team.insertMany([
   {
-    "rank": 100,
-    "dead": false,
-    "online": true,
-    "name": "CustomPlayer1",
-    "level": 85,
-    "class": "Templar",
-    "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "experience": 3500000000,
-    "account": "NewAccount1",
-    "challenges": 30,
-    "twitch": "customplayer1",
-    "ladder": "Custom League",
-    "custom_field": "Added Player 1",
-    "created_at": new Date()
+    name: "Adrien Gunther",
+    role: "Database Administrator",
+    email: "adrien.gunther@eduvaud.ch",
+    specialization: "MongoDB Management",
+    created_at: new Date()
   },
   {
-    "rank": 101,
-    "dead": false,
-    "online": false,
-    "name": "CustomPlayer2",
-    "level": 78,
-    "class": "Marauder",
-    "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "experience": 3200000000,
-    "account": "NewAccount2",
-    "challenges": 25,
-    "twitch": null,
-    "ladder": "Custom League HC",
-    "custom_field": "Added Player 2",
-    "created_at": new Date()
+    name: "Claire Prodolliet",
+    role: "Application Developer",
+    email: "claire.prodolliet@eduvaud.ch",
+    specialization: "Flask Applications",
+    created_at: new Date()
   },
   {
-    "rank": 102,
-    "dead": true,
-    "online": false,
-    "name": "CustomPlayer3",
-    "level": 66,
-    "class": "Duelist",
-    "id": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-    "experience": 2800000000,
-    "account": "NewAccount3",
-    "challenges": 20,
-    "twitch": "customgamer3",
-    "ladder": "Custom SSF",
-    "custom_field": "Added Player 3",
-    "created_at": new Date()
+    name: "Thomas Burkhalter",
+    role: "Data Analyst",
+    email: "thomas.burkhalter@eduvaud.ch",
+    specialization: "Data Visualization",
+    created_at: new Date()
   }
 ])
 ```
 
-### Step 8: Export Collections
+### Step 8: Make Required Data Modifications
+
+Modify 3 existing documents:
+
+```javascript
+// Modify first document
+db.open_data.updateOne(
+  { name: "Tzn_NecroIsFineNow" },
+  { $set: { custom_field: "Modified Player 1", modified_at: new Date() } },
+);
+
+// Modify second document
+db.open_data.updateOne(
+  { name: "RaizNeverFirstQT" },
+  { $set: { custom_field: "Modified Player 2", modified_at: new Date() } },
+);
+
+// Modify third document
+db.open_data.updateOne(
+  { name: "GucciStreamerAdvantage" },
+  { $set: { custom_field: "Modified Player 3", modified_at: new Date() } },
+);
+```
+
+Add 3 new documents:
+
+```javascript
+// Add 3 new custom players
+db.open_data.insertMany([
+  {
+    rank: 100,
+    dead: false,
+    online: true,
+    name: "CustomPlayer1",
+    level: 85,
+    class: "Templar",
+    id: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    experience: 3500000000,
+    account: "NewAccount1",
+    challenges: 30,
+    twitch: "customplayer1",
+    ladder: "Custom League",
+    custom_field: "Added Player 1",
+    created_at: new Date(),
+  },
+  {
+    rank: 101,
+    dead: false,
+    online: false,
+    name: "CustomPlayer2",
+    level: 78,
+    class: "Marauder",
+    id: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    experience: 3200000000,
+    account: "NewAccount2",
+    challenges: 25,
+    twitch: null,
+    ladder: "Custom League HC",
+    custom_field: "Added Player 2",
+    created_at: new Date(),
+  },
+  {
+    rank: 102,
+    dead: true,
+    online: false,
+    name: "CustomPlayer3",
+    level: 66,
+    class: "Duelist",
+    id: "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    experience: 2800000000,
+    account: "NewAccount3",
+    challenges: 20,
+    twitch: "customgamer3",
+    ladder: "Custom SSF",
+    custom_field: "Added Player 3",
+    created_at: new Date(),
+  },
+]);
+
+// Exit MongoDB shell
+exit;
+```
+
+### Step 9: Export Collections
 
 ```cmd
-# Export collections
+# Export open_data collection
 mongoexport --db my_data --collection open_data --out exports\open_data_export.json --pretty
+
+# Export my_team collection
 mongoexport --db my_data --collection my_team --out exports\my_team_export.json --pretty
 ```
 
-### Step 9: Create Backup
+### Step 10: Create Database Backup
 
 ```cmd
-# Create backup
+# Create backup using userPlus credentials
 mongodump --username userPlus --password BackupPassword789! --authenticationDatabase admin --out backup\
 ```
 
-### Step 10: Run the Application
+### Step 11: Run the Flask Application
 
 ```cmd
-# Without authentication
+# Activate virtual environment (if not already active)
+venv\Scripts\activate
+
+# Run without authentication
 python app.py
 
-# With authentication
+# OR run with authentication (in separate terminal)
 set MONGO_USERNAME=myUserAdmin
 set MONGO_PASSWORD=SecurePassword123!
 python app.py
 ```
 
-### Step 11: Access the Application
+### Step 12: Access the Application
 
 - Open your browser
 - Navigate to: [http://localhost:5000](http://localhost:5000)
 - Check health: [http://localhost:5000/health](http://localhost:5000/health)
+- View statistics: [http://localhost:5000/api/stats](http://localhost:5000/api/stats)
 
-## Troubleshooting
+## Verification Commands
 
-### Common Issues
+Run these in MongoDB shell to verify your setup:
 
-**1. Python not found**
+```javascript
+use my_data
 
-- Ensure Python is installed and added to PATH
-- Try using `py` instead of `python`
+// Check document counts
+db.open_data.countDocuments()  // Should be 103 (100 original + 3 added)
+db.my_team.countDocuments()    // Should be 3
 
-**2. MongoDB service won't start**
+// Verify modified documents
+db.open_data.find({ custom_field: { $exists: true } }).count()  // Should be 6
 
-```cmd
-# Check Windows Services
-services.msc
-# Look for "MongoDB Server" and start it manually
+// Verify added documents
+db.open_data.find({ created_at: { $exists: true } }).count()    // Should be 3
+
+// Check users (as admin)
+use admin
+db.getUsers()  // Should show 3 users
 ```
-
-**3. Virtual environment activation fails**
-
-```cmd
-# Try different activation method
-venv\Scripts\activate.bat
-# Or use PowerShell
-venv\Scripts\Activate.ps1
-```
-
-**4. mongoimport command not found**
-
-- MongoDB bin directory should be in PATH
-- Try full path: `"C:\Program Files\MongoDB\Server\5.0\bin\mongoimport"`
-
-**5. Permission errors**
-
-- Run Command Prompt as Administrator
-- Check MongoDB data directory permissions
