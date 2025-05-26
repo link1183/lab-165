@@ -236,6 +236,6 @@ mongodump --username userPlus --password BackupPassword789! --out backup/
 
 All documentation is located in the `/docs` directory:
 
-- `mongosh_commands.md` - Complete command reference with results
-- `user_passwords.md` - Secure credential documentation
-- `windows-setup.md` - Detailed Windows installation guide
+- `./docs/mongosh_commands.md` - Complete command reference with results
+- `./docs/user_passwords.md` - Secure credential documentation
+- `./docs/windows-setup.md` - Detailed Windows installation guide

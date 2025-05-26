@@ -26,11 +26,11 @@
 
 ```cmd
 # Option 1: Clone with Git
-git clone <repository-url>
+git clone https://github.com/link1183/lab-165.git
 cd lab-165
 
 # Option 2: Download and extract ZIP file
-# Extract to C:\lab-165 or your preferred location
+# Extract to whatever is your preferred location
 ```
 
 ### Step 2: Automatic Setup
